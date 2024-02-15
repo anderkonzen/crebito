@@ -43,7 +43,8 @@ defmodule Crebito.MixProject do
       {:bandit, "~> 1.2"},
       # Checks
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
-      {:mix_audit, "~> 2.1", only: [:dev, :test], runtime: false}
+      {:mix_audit, "~> 2.1", only: [:dev, :test], runtime: false},
+      {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false}
     ]
   end
 
