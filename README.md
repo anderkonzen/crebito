@@ -1,6 +1,7 @@
 # Crebito
 
-[![CI](https://github.com/anderkonzen/crebito/actions/workflows/ci.yaml/badge.svg)](https://github.com/anderkonzen/crebito/actions/workflows/ci.yaml) [![Coverage Status](https://coveralls.io/repos/github/anderkonzen/crebito/badge.svg?branch=main)](https://coveralls.io/github/anderkonzen/crebito?branch=main)
+![Static Badge](https://img.shields.io/badge/rinha_de_backend-2024_q1-yellow)
+ [![CI](https://github.com/anderkonzen/crebito/actions/workflows/ci.yaml/badge.svg)](https://github.com/anderkonzen/crebito/actions/workflows/ci.yaml) [![Coverage Status](https://coveralls.io/repos/github/anderkonzen/crebito/badge.svg?branch=main)](https://coveralls.io/github/anderkonzen/crebito?branch=main)
 
 To start your Phoenix server:
 
