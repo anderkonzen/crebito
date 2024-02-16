@@ -9,5 +9,6 @@ defmodule CrebitoWeb.Router do
     pipe_through :api
 
     post "/clientes/:id/transacoes", ClientController, :create_transaction
+    get "/clientes/:id/extrato", ClientController, :get_statement
   end
 end

@@ -12,4 +12,25 @@ defmodule CrebitoWeb.ClientJSON do
       saldo: client.current_balance
     }
   end
+
+  def statement(%{client: %Client{} = client, transactions: transactions}) do
+    last_transactions =
+      Enum.map(transactions, fn txn ->
+        %{
+          valor: txn.value,
+          tipo: txn.type,
+          descricao: txn.description,
+          realizada_em: txn.inserted_at
+        }
+      end)
+
+    %{
+      saldo: %{
+        total: client.current_balance,
+        data_extrato: "1",
+        limite: client.limit
+      },
+      ultimas_transacoes: last_transactions
+    }
+  end
 end

@@ -2,8 +2,10 @@ defmodule Crebito.Accounts.Repository do
   @moduledoc false
 
   import Ecto.Changeset
+  import Ecto.Query
 
   alias Crebito.Accounts.Client
+  alias Crebito.Accounts.Transaction
 
   @doc false
   @spec create_transaction_changeset(Client.t(), map()) :: Ecto.Changeset.t()
@@ -33,5 +35,17 @@ defmodule Crebito.Accounts.Repository do
     else
       add_error(changeset, :current_balance, "has maxed out the limit")
     end
+  end
+
+  @doc false
+  @spec all_client_transactions_queryable(Client.t(), integer()) :: Ecto.Query.t()
+  def all_client_transactions_queryable(%Client{} = client, limit) do
+    from(
+      t in Transaction,
+      where: t.client_id == ^client.id,
+      order_by: [desc: t.id],
+      limit: ^limit,
+      select: t
+    )
   end
 end

@@ -7,6 +7,8 @@ defmodule CrebitoWeb.ClientController do
 
   action_fallback CrebitoWeb.FallbackController
 
+  @doc false
+  @spec create_transaction(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def create_transaction(conn, %{"id" => client_id} = params) do
     txn_params = map_txn_params(params)
 
@@ -26,5 +28,17 @@ defmodule CrebitoWeb.ClientController do
       type: params["tipo"],
       description: params["descricao"]
     }
+  end
+
+  @doc false
+  @spec get_statement(Plug.Conn.t(), map()) :: Plug.Conn.t()
+  def get_statement(conn, %{"id" => client_id}) do
+    with {:ok, client} <- Accounts.get_client(client_id),
+         transactions <- Accounts.get_transactions(client) do
+      conn
+      |> put_status(:ok)
+      |> put_view(json: CrebitoWeb.ClientJSON)
+      |> render(:statement, client: client, transactions: transactions)
+    end
   end
 end

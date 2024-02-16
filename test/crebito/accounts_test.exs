@@ -75,4 +75,29 @@ defmodule Crebito.AccountsTest do
       assert Repo.all(Transaction) == []
     end
   end
+
+  describe "statement" do
+    test "returns all transactions for a given client" do
+      transaction = insert(:transaction)
+
+      assert length(Accounts.get_transactions(transaction.client)) == 1
+    end
+
+    test "returns the default limit" do
+      client = insert(:client)
+      insert_list(20, :transaction, client: client)
+
+      assert length(Accounts.get_transactions(client)) == 10
+    end
+
+    test "returns transactions ordered by insertion date" do
+      client = insert(:client)
+      txn_1 = insert(:transaction, client: client)
+      txn_2 = insert(:transaction, client: client)
+
+      [list_txn_2, list_txn_1] = Accounts.get_transactions(client)
+      assert list_txn_1.id == txn_1.id
+      assert list_txn_2.id == txn_2.id
+    end
+  end
 end
