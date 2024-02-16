@@ -35,4 +35,46 @@ defmodule CrebitoWeb.ClientControllerTest do
                json_response(conn, 422)["errors"]
     end
   end
+
+  describe "get_statement" do
+    test "returns latest transactions", %{conn: conn} do
+      client = insert(:client, limit: 10_000)
+      post_transaction(conn, client, "c", 5, "first")
+      post_transaction(conn, client, "d", 100, "second")
+
+      conn = get(conn, ~p"/clientes/#{client.id}/extrato")
+
+      assert %{
+               "saldo" => %{
+                 "total" => -95,
+                 "data_extrato" => _,
+                 "limite" => 10_000
+               },
+               "ultimas_transacoes" => [
+                 %{
+                   "valor" => 100,
+                   "tipo" => "d",
+                   "descricao" => "second",
+                   "realizada_em" => _
+                 },
+                 %{
+                   "valor" => 5,
+                   "tipo" => "c",
+                   "descricao" => "first",
+                   "realizada_em" => _
+                 }
+               ]
+             } = json_response(conn, 200)
+    end
+
+    test "returns 404 whe client does not exist", %{conn: conn} do
+      conn = post(conn, ~p"/clientes/-1/extrato")
+      assert json_response(conn, 404)["errors"] == %{"detail" => "Not Found"}
+    end
+  end
+
+  defp post_transaction(conn, client, type, value, description) do
+    params = %{valor: value, tipo: type, descricao: description}
+    post(conn, ~p"/clientes/#{client.id}/transacoes", params)
+  end
 end

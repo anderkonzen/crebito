@@ -40,4 +40,11 @@ defmodule Crebito.Accounts do
       client.current_balance - value
     end
   end
+
+  @doc false
+  @spec get_transactions(Client.t(), integer()) :: list(Transaction.t())
+  def get_transactions(%Client{} = client, limit \\ 10) do
+    Repository.all_client_transactions_queryable(client, limit)
+    |> Repo.all()
+  end
 end
