@@ -5,11 +5,26 @@ defmodule Crebito.MixProject do
     [
       app: :crebito,
       version: "0.1.0",
-      elixir: "~> 1.14",
+      elixir: "~> 1.16",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
-      deps: deps()
+      deps: deps(),
+      dialyzer: [
+        ignore_warnings: ".dialyzer_ignore.exs",
+        plt_file: {:no_warn, "priv/plts/dialyzer.plt"},
+        # Dialyze in MIX_ENV=test (CI)
+        plt_add_apps: [:ex_unit],
+        # Error out when an ignore rule is no longer useful so we can remove it
+        list_unused_filters: true
+      ],
+      test_coverage: [tool: ExCoveralls],
+      preferred_cli_env: [
+        coveralls: :test,
+        "coveralls.detail": :test,
+        "coveralls.html": :test,
+        "coveralls.github": :test
+      ]
     ]
   end
 
@@ -44,7 +59,9 @@ defmodule Crebito.MixProject do
       # Checks
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
       {:mix_audit, "~> 2.1", only: [:dev, :test], runtime: false},
-      {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false}
+      {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false},
+      # Test
+      {:excoveralls, "~> 0.18", only: :test}
     ]
   end
 

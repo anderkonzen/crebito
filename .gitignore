@@ -25,3 +25,6 @@ erl_crash.dump
 # Ignore package tarball (built via "mix hex.build").
 crebito-*.tar
 
+# Ignore dialyzer PLT files on custom location
+/priv/plts/*.plt
+/priv/plts/*.plt.hash
