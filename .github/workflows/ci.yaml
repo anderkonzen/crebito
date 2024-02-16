@@ -57,7 +57,7 @@ jobs:
 
   linter:
     needs: compile
-    name: Linter
+    name: Linter and Security
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -95,6 +95,9 @@ jobs:
 
       - name: Format
         run: mix format --check-formatted
+
+      - name: Sobelow
+        run: mix sobelow --config
 
   deps_audit:
     needs: compile
