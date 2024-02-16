@@ -260,7 +260,7 @@ jobs:
         run: mix coveralls.github --warnings-as-errors --raise
 
   docker:
-    name: Docker
+    name: Publish docker image
     runs-on: ubuntu-latest
     needs: [linter, deps_audit, dialyzer, test]
 
@@ -284,6 +284,6 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          platforms: linux/amd64,linux/arm64/v8
+          platforms: linux/amd64
           push: true
           tags: anderkonzen/crebito:latest
