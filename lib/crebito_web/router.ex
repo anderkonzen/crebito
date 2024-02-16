@@ -5,7 +5,9 @@ defmodule CrebitoWeb.Router do
     plug :accepts, ["json"]
   end
 
-  scope "/api", CrebitoWeb do
+  scope "/", CrebitoWeb do
     pipe_through :api
+
+    post "/clientes/:id/transacoes", ClientController, :create_transaction
   end
 end
