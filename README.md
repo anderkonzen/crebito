@@ -1,6 +1,6 @@
-[![Coverage Status](https://coveralls.io/repos/github/anderkonzen/crebito/badge.svg?branch=main)](https://coveralls.io/github/anderkonzen/crebito?branch=main)
-
 # Crebito
+
+[![CI](https://github.com/anderkonzen/crebito/actions/workflows/ci.yaml/badge.svg)](https://github.com/anderkonzen/crebito/actions/workflows/ci.yaml) [![Coverage Status](https://coveralls.io/repos/github/anderkonzen/crebito/badge.svg?branch=main)](https://coveralls.io/github/anderkonzen/crebito?branch=main)
 
 To start your Phoenix server:
 
