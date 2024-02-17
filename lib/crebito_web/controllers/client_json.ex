@@ -27,7 +27,7 @@ defmodule CrebitoWeb.ClientJSON do
     %{
       saldo: %{
         total: client.current_balance,
-        data_extrato: "1",
+        data_extrato: DateTime.now!("Etc/UTC"),
         limite: client.limit
       },
       ultimas_transacoes: last_transactions

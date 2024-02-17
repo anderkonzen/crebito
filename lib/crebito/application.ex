@@ -8,7 +8,6 @@ defmodule Crebito.Application do
   @impl true
   def start(_type, _args) do
     children = [
-      CrebitoWeb.Telemetry,
       Crebito.Repo,
       {DNSCluster, query: Application.get_env(:crebito, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: Crebito.PubSub},
