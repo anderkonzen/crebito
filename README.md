@@ -30,6 +30,10 @@ Nos testes da Rinha, por exemplo, um dos cenários é a simulação de 25 chamad
 
 Já em termos de performance, entra em cena tanto a stack utilizada (aqui por exemplo é Elixir/Erlang/Phoenix) e a configuração da arquitetura proposta para que as chamadas sejam processados o mais rápido possível.
 
+## Iterações
+
+Abaixo uma listagem e mais detalhes das iterações que eu fiz com o projeto, e como ele foi evoluindo.
+
 <details>
 
 <summary>Release 0.1.0 (não submetida)</summary>
@@ -39,9 +43,11 @@ Na primeira implementação, utilizei a configuração de arquitetura proposta s
 
 Aqui me preocupei mais em fazer o setup do projeto com o intuito de apenas passar nos [testes da Rinha](https://github.com/zanfranceschi/rinha-de-backend-2024-q1?tab=readme-ov-file#ferramenta-de-teste). Como fazia um tempo que eu não criava um projeto Phoenix do zero, gastei um tempo fazendo a configuração do projeto em si, e também do [CI](https://github.com/anderkonzen/crebito/actions/workflows/ci.yaml) (com checks de análise estática, auditoria de dependências e testes) e publicação da imagem no DockerHub.
 
+![CleanShot 2024-02-17 at 7  30 36](https://github.com/anderkonzen/crebito/assets/1413997/9b8ac677-571d-4ca1-af68-9f0dfa8389ec)
 
+Na primeira rodada de testes percebi que a parte de concorrência não tinha ficado legal (eu tinha tentando usar apenas changesets e Multi), e acabei optando por fazer um update com incremento, e também garantir que o saldo não ficasse além do limite com uma constraint check na tabela. Na imagem abaixo podemos ver que todos os testes passaram, e o tempo p75 ficou em 5ms.
 
-Na primeira rodada de testes percebi que a parte de concorrência não tinha ficado legal (eu tinha tentando usar apenas changesets e Multi), e acabei optando por fazer um update com incremento, e também garantir que o saldo não ficasse além do limite com uma constraint check na tabela.
+![CleanShot 2024-02-17 at 5  17 08](https://github.com/anderkonzen/crebito/assets/1413997/b9847daf-2579-4d2e-8457-92042090e4b6)
 
 </details>
 
