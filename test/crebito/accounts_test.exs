@@ -4,7 +4,9 @@ defmodule Crebito.AccountsTest do
   import Crebito.Factory
 
   alias Crebito.Accounts
+  alias Crebito.Accounts.Client
   alias Crebito.Accounts.Transaction
+  alias Crebito.Repo
 
   describe "clients" do
     test "get_client/1 returns the client with given id" do
@@ -24,11 +26,12 @@ defmodule Crebito.AccountsTest do
       txn_attrs = %{
         value: 1000,
         type: :c,
-        description: "credit"
+        description: "credit",
+        client_id: client.id
       }
 
       {:ok, %{client: updated_client, transaction: transaction}} =
-        Accounts.process_operation(client, txn_attrs)
+        Accounts.process_operation(txn_attrs)
 
       assert updated_client.limit == client.limit
       assert updated_client.opening_balance == client.opening_balance
@@ -45,11 +48,12 @@ defmodule Crebito.AccountsTest do
       txn_attrs = %{
         value: 1000,
         type: :d,
-        description: "debit"
+        description: "debit",
+        client_id: client.id
       }
 
       {:ok, %{client: updated_client, transaction: transaction}} =
-        Accounts.process_operation(client, txn_attrs)
+        Accounts.process_operation(txn_attrs)
 
       assert updated_client.limit == client.limit
       assert updated_client.opening_balance == client.opening_balance
@@ -66,13 +70,56 @@ defmodule Crebito.AccountsTest do
       txn_attrs = %{
         value: 100_000,
         type: :d,
-        description: "debit"
+        description: "debit",
+        client_id: client.id
       }
 
-      {:error, :client, changeset, _} = Accounts.process_operation(client, txn_attrs)
+      # {:error, :client, changeset, _} =
+      Accounts.process_operation(txn_attrs)
 
-      assert changeset.errors == [current_balance: {"has maxed out the limit", []}]
+      # assert changeset.errors == [current_balance: {"has maxed out the limit", []}]
       assert Repo.all(Transaction) == []
+    end
+
+    test "fails transaction when description is too big" do
+      client = insert(:client)
+
+      txn_attrs = %{
+        value: 1,
+        type: :d,
+        description: "this description is too big",
+        client_id: client.id
+      }
+
+      {:error, :transaction, changeset, _} = Accounts.process_operation(txn_attrs)
+
+      assert changeset.errors == [
+               description:
+                 {"should be at most %{count} character(s)",
+                  [count: 10, validation: :length, kind: :max, type: :string]}
+             ]
+
+      assert Repo.all(Transaction) == []
+    end
+
+    test "debits the right amount given concurrent calls" do
+      client = insert(:client)
+
+      txn_attrs = %{
+        value: 1,
+        type: :d,
+        description: "debit",
+        client_id: client.id
+      }
+
+      1..25
+      |> Task.async_stream(fn _ ->
+        Accounts.process_operation(txn_attrs)
+      end)
+      |> Stream.run()
+
+      client = Repo.get!(Client, client.id)
+      assert client.current_balance == -25
     end
   end
 

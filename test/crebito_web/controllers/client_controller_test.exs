@@ -34,6 +34,54 @@ defmodule CrebitoWeb.ClientControllerTest do
       assert %{"current_balance" => ["has maxed out the limit"]} ==
                json_response(conn, 422)["errors"]
     end
+
+    test "return 422 when value is not an integer", %{conn: conn} do
+      client = insert(:client, limit: 1000, opening_balance: 0, current_balance: 0)
+      params = %{valor: 1.2, tipo: "d", descricao: "devolve"}
+
+      conn = post(conn, ~p"/clientes/#{client.id}/transacoes", params)
+
+      assert %{"value" => ["is invalid"]} == json_response(conn, 422)["errors"]
+    end
+
+    test "return 422 when type is invalid", %{conn: conn} do
+      client = insert(:client, limit: 1000, opening_balance: 0, current_balance: 0)
+      params = %{valor: 1, tipo: "x", descricao: "devolve"}
+
+      conn = post(conn, ~p"/clientes/#{client.id}/transacoes", params)
+
+      assert %{"type" => ["is invalid"]} == json_response(conn, 422)["errors"]
+    end
+
+    test "return 422 when descricao is bigger than 10 chars", %{conn: conn} do
+      client = insert(:client, limit: 1000, opening_balance: 0, current_balance: 0)
+      params = %{valor: 1, tipo: "c", descricao: "123456789 e mais um pouco"}
+
+      conn = post(conn, ~p"/clientes/#{client.id}/transacoes", params)
+
+      assert %{"description" => ["should be at most 10 character(s)"]} ==
+               json_response(conn, 422)["errors"]
+    end
+
+    test "return 422 when descricao is empty", %{conn: conn} do
+      client = insert(:client, limit: 1000, opening_balance: 0, current_balance: 0)
+      params = %{valor: 1, tipo: "c", descricao: ""}
+
+      conn = post(conn, ~p"/clientes/#{client.id}/transacoes", params)
+
+      assert %{"description" => ["can't be blank"]} ==
+               json_response(conn, 422)["errors"]
+    end
+
+    test "return 422 when descricao is null", %{conn: conn} do
+      client = insert(:client, limit: 1000, opening_balance: 0, current_balance: 0)
+      params = %{valor: 1, tipo: "c", descricao: nil}
+
+      conn = post(conn, ~p"/clientes/#{client.id}/transacoes", params)
+
+      assert %{"description" => ["can't be blank"]} ==
+               json_response(conn, 422)["errors"]
+    end
   end
 
   describe "get_statement" do

@@ -9,6 +9,10 @@ create table clients
     updated_at      timestamp(0) not null
 );
 
+alter table clients
+    add constraint current_balance_within_limit
+        check (abs(current_balance) < "limit");
+
 create table transactions
 (
     id          bigserial

@@ -19,31 +19,51 @@ defmodule Crebito.Accounts do
   end
 
   @doc false
-  @spec process_operation(Client.t(), map()) :: {:ok, Client.t(), Transaction.t()} | any()
-  def process_operation(client, txn_attrs) do
+  @spec process_operation(map()) :: {:ok, any()}
+  def process_operation(txn_attrs) do
     Multi.new()
-    |> Multi.insert(:transaction, Repository.create_transaction_changeset(client, txn_attrs))
-    |> Multi.update(:client, fn changes ->
-      new_balance = calculate_new_balance(client, changes)
-      Repository.update_client_current_balance_changeset(client, new_balance)
-    end)
+    |> Multi.insert(:transaction, Repository.create_transaction_changeset(txn_attrs))
+    |> Multi.update_all(
+      :client,
+      fn changes ->
+        increment = calculate_increment(changes)
+
+        Client
+        |> where(id: ^txn_attrs.client_id)
+        |> update(inc: [current_balance: ^increment])
+        |> select([c], c)
+      end,
+      []
+    )
     |> Repo.transaction()
+    |> case do
+      {:ok, %{client: {_, [client]}, transaction: transaction}} ->
+        {:ok, %{client: client, transaction: transaction}}
+
+      error ->
+        error
+    end
+  rescue
+    error in [Postgrex.Error] ->
+      if error.postgres.constraint == "current_balance_within_limit" do
+        {:error, Repository.invalid_balance_client_changeset()}
+      end
   end
 
-  defp calculate_new_balance(client, changes) do
+  defp calculate_increment(changes) do
     value = changes.transaction.value
     type = changes.transaction.type
 
     if type == :c do
-      client.current_balance + value
+      value
     else
-      client.current_balance - value
+      value * -1
     end
   end
 
   @doc false
   @spec get_transactions(Client.t(), integer()) :: list(Transaction.t())
-  def get_transactions(%Client{} = client, limit \\ 10) do
+  def get_transactions(client, limit \\ 10) do
     Repository.all_client_transactions_queryable(client, limit)
     |> Repo.all()
   end

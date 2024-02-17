@@ -21,3 +21,7 @@ up:
 down:
 	docker compose down
 
+.PHONY: kill
+kill:
+	docker compose kill
+

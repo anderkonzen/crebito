@@ -15,6 +15,14 @@ defmodule CrebitoWeb.FallbackController do
   end
 
   @doc false
+  def call(conn, {:error, :transaction, %Ecto.Changeset{} = changeset, _}) do
+    conn
+    |> put_status(:unprocessable_entity)
+    |> put_view(json: CrebitoWeb.ChangesetJSON)
+    |> render(:error, changeset: changeset)
+  end
+
+  @doc false
   def call(conn, {:error, %Ecto.Changeset{} = changeset}) do
     conn
     |> put_status(:unprocessable_entity)
