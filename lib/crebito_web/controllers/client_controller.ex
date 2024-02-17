@@ -10,11 +10,11 @@ defmodule CrebitoWeb.ClientController do
   @doc false
   @spec create_transaction(Plug.Conn.t(), map()) :: Plug.Conn.t()
   def create_transaction(conn, %{"id" => client_id} = params) do
-    txn_params = map_txn_params(params)
+    txn_params = map_txn_params(client_id, params)
 
-    with {:ok, client} <- Accounts.get_client(client_id),
+    with {:ok, _client} <- Accounts.get_client(client_id),
          {:ok, %{client: client, transaction: _transaction}} <-
-           Accounts.process_operation(client, txn_params) do
+           Accounts.process_operation(txn_params) do
       conn
       |> put_status(:ok)
       |> put_view(json: CrebitoWeb.ClientJSON)
@@ -22,11 +22,12 @@ defmodule CrebitoWeb.ClientController do
     end
   end
 
-  defp map_txn_params(params) do
+  defp map_txn_params(client_id, params) do
     %{
       value: params["valor"],
       type: params["tipo"],
-      description: params["descricao"]
+      description: params["descricao"],
+      client_id: client_id
     }
   end
 
