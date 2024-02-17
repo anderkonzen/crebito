@@ -287,3 +287,5 @@ jobs:
           platforms: linux/amd64
           push: true
           tags: anderkonzen/crebito:latest
+          cache-from: type=registry,ref=anderkonzen/crebito:buildcache
+          cache-to: type=registry,ref=anderkonzen/crebito:buildcache,mode=max
