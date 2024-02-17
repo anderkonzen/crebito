@@ -74,6 +74,26 @@ defmodule Crebito.AccountsTest do
       assert changeset.errors == [current_balance: {"has maxed out the limit", []}]
       assert Repo.all(Transaction) == []
     end
+
+    test "fails transaction when description is too big" do
+      client = insert(:client)
+
+      txn_attrs = %{
+        value: 1,
+        type: :d,
+        description: "this description is too big"
+      }
+
+      {:error, :transaction, changeset, _} = Accounts.process_operation(client, txn_attrs)
+
+      assert changeset.errors == [
+               description:
+                 {"should be at most %{count} character(s)",
+                  [count: 10, validation: :length, kind: :max, type: :string]}
+             ]
+
+      assert Repo.all(Transaction) == []
+    end
   end
 
   describe "statement" do

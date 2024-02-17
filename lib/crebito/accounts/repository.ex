@@ -11,7 +11,7 @@ defmodule Crebito.Accounts.Repository do
   @spec create_transaction_changeset(Client.t(), map()) :: Ecto.Changeset.t()
   def create_transaction_changeset(%Client{} = client, attrs) do
     client
-    |> Ecto.build_assoc(:transactions, attrs)
+    |> Ecto.build_assoc(:transactions)
     |> cast(attrs, [:value, :type, :description])
     |> validate_required([:value, :type, :description, :client_id])
     |> validate_number(:value, greater_than_or_equal_to: 0)
