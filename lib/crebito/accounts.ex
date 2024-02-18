@@ -6,6 +6,7 @@ defmodule Crebito.Accounts do
   alias Crebito.Accounts.Client
   alias Crebito.Accounts.Repository
   alias Crebito.Accounts.Transaction
+  alias Crebito.KV
   alias Crebito.Repo
   alias Ecto.Multi
 
@@ -15,6 +16,22 @@ defmodule Crebito.Accounts do
     case Repo.get(Client, id) do
       nil -> {:error, :not_found}
       client -> {:ok, client}
+    end
+  end
+
+  @doc false
+  @spec client_exists?(integer()) :: :ok | {:error, :not_found}
+  def client_exists?(id) do
+    cond do
+      KV.has?(id) == true ->
+        :ok
+
+      elem(get_client(id), 0) == :ok ->
+        KV.put(id)
+        :ok
+
+      true ->
+        {:error, :not_found}
     end
   end
 
