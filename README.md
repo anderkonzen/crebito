@@ -1,6 +1,6 @@
 # Crebito
 
-![Static Badge](https://img.shields.io/badge/rinha_de_backend-2024_q1-yellow)  [![CI](https://github.com/anderkonzen/crebito/actions/workflows/ci.yaml/badge.svg)](https://github.com/anderkonzen/crebito/actions/workflows/ci.yaml)  [![Coverage Status](https://coveralls.io/repos/github/anderkonzen/crebito/badge.svg?branch=main)](https://coveralls.io/github/anderkonzen/crebito?branch=main)
+![Static Badge](https://img.shields.io/badge/rinha_de_backend-2024_q1-yellow)  [![CI](https://github.com/anderkonzen/crebito/actions/workflows/ci.yaml/badge.svg)](https://github.com/anderkonzen/crebito/actions/workflows/ci.yaml)  [![Coverage Status](https://coveralls.io/repos/github/anderkonzen/crebito/badge.svg?branch=main&kill_cache=1)](https://coveralls.io/github/anderkonzen/crebito?branch=main)
 
 Este repositório contém uma solução para o problema proposto na [Segunda Edição da Rinha de Backend (2024q1)](https://github.com/zanfranceschi/rinha-de-backend-2024-q1).
 
