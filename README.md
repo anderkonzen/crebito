@@ -51,6 +51,21 @@ Na primeira rodada de testes percebi que a parte de concorrência não tinha fic
 
 </details>
 
+<details>
+
+<summary>Release 0.2.0 (submetida)</summary>
+<br />
+
+Nesta iteração acrescentei um key-value store in-memory usando um pequeno GenServer com a ideia de economizar uma volta no banco para quando queremos verificar se o cliente existe. Também adicionei uma variável de ambiente para desligar os logs para ver se fazia diferença.
+
+Com estas duas mudanças consegui apenas um ganho marginal de 1ms no p75.
+
+Fiz alguns testes alterando as configurações de CPU e memória mas não obtive melhorias consideráveis.
+
+![CleanShot 2024-02-18 at 2  59 24](https://github.com/anderkonzen/crebito/assets/1413997/4db4cf3d-9eca-4c7b-ae4c-989f3fc87600)
+
+</details>
+
 ## Execução local
 
 Para rodar o projeto local é necessário apenas uma instância do PostgreSQL, e Elixir 1.16/Erlang 26 instalados. Para uma configuração padrão, pode-se executar os seguintes passos:
