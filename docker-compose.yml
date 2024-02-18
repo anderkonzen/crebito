@@ -8,6 +8,8 @@ services:
       - DATABASE_URL=ecto://postgres:postgres@db/crebito_prod
       - SECRET_KEY_BASE=JPJ+Us105BpDWDJGyR2W/MVIE37wpuyjYwRUPvOmZwFm48H9clVM0/WrnsHBJ+m/
       - DB_HOSTNAME=db
+      - POOL_SIZE=15
+      - DISABLE_LOG=true
     ports:
       - "8081:4000"
     depends_on:
