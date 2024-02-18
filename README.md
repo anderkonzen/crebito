@@ -28,11 +28,11 @@ Nos testes da Rinha, por exemplo, um dos cenários é a simulação de 25 chamad
 > [!IMPORTANT]
 > Como estamos mirando uma API que irá receber muitas chamadas concorrentes, é importante evitar o padrão "ler, modificar, escrever" [^1] para evitar situação de condições de corrida. Neste caso pode-se usar apenas um SQL de update com incremento ou mesmo um `SELECT ... FOR UPDATE`.
 
-Já em termos de performance, entra em cena tanto a stack utilizada (aqui por exemplo é Elixir/Erlang/Phoenix) e a configuração da arquitetura proposta para que as chamadas sejam processados o mais rápido possível.
+Já em termos de performance, entra em cena tanto a stack utilizada (aqui por exemplo é Elixir/Erlang/Phoenix) e a configuração da arquitetura proposta para que as chamadas sejam processadas o mais rápido possível.
 
 ## Iterações
 
-Abaixo uma listagem e mais detalhes das iterações que eu fiz com o projeto, e como ele foi evoluindo.
+Abaixo mais detalhes das iterações que eu fiz com o projeto, e como ele foi evoluindo.
 
 <details>
 
@@ -45,7 +45,7 @@ Aqui me preocupei mais em fazer o setup do projeto com o intuito de apenas passa
 
 ![CleanShot 2024-02-17 at 7  30 36](https://github.com/anderkonzen/crebito/assets/1413997/9b8ac677-571d-4ca1-af68-9f0dfa8389ec)
 
-Na primeira rodada de testes percebi que a parte de concorrência não tinha ficado legal (eu tinha tentando usar apenas changesets e Multi), e acabei optando por fazer um update com incremento, e também garantir que o saldo não ficasse além do limite com uma constraint check na tabela. Na imagem abaixo podemos ver que todos os testes passaram, e o tempo p75 ficou em 5ms.
+Na primeira rodada de testes percebi que a parte de concorrência não tinha ficado legal (eu tinha tentando usar apenas [Ecto.Changeset](https://hexdocs.pm/ecto/Ecto.Changeset.html) e [Multi](https://hexdocs.pm/ecto/Ecto.Multi.html)). Para melhorar acabei optando por fazer um "update com incremento" no saldo e também acrescentei uma constraint check na coluna para garantir que o saldo não ficasse além do limite. Na imagem abaixo podemos ver que todos os testes passaram, e o tempo p75 ficou em 5ms.
 
 ![CleanShot 2024-02-17 at 5  17 08](https://github.com/anderkonzen/crebito/assets/1413997/b9847daf-2579-4d2e-8457-92042090e4b6)
 
@@ -53,10 +53,10 @@ Na primeira rodada de testes percebi que a parte de concorrência não tinha fic
 
 ## Execução local
 
-Para rodar o projeto local, é necessário apenas uma instância do PostgreSQL e Elixir 1.16/Erlang 26. Para uma configuração padrão, pode-se executar os seguintes passos:
+Para rodar o projeto local é necessário apenas uma instância do PostgreSQL, e Elixir 1.16/Erlang 26 instalados. Para uma configuração padrão, pode-se executar os seguintes passos:
 
-* Rode `mix setup` para instalar e configurar as dependências
-* Inicie a aplicação com `mix phx.server` ou dentro do IEx com `iex -S mix phx.server`
+* rode `mix setup` para instalar e configurar as dependências
+* inicie a aplicação com `mix phx.server` ou dentro do IEx com `iex -S mix phx.server`
 
 A partir deste ponto a API estará rodando em http://localhost:4000. Execute `curl localhost:4000/clientes/1/extrato` para verificar que a API está acessível.
 
