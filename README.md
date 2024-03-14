@@ -58,7 +58,7 @@ Na primeira rodada de testes percebi que a parte de concorrência não tinha fic
 
 Nesta iteração acrescentei um key-value store in-memory usando um pequeno GenServer com a ideia de economizar uma volta no banco para quando queremos verificar se o cliente existe. Também adicionei uma variável de ambiente para desligar os logs para ver se fazia diferença.
 
-Com estas duas mudanças consegui apenas um ganho marginal de 1ms no p75.
+Com estas duas mudanças consegui apenas um ganho "marginal" de 1ms no p75 (bem, consegui um ganho de 20% né - de 5ms para 4ms, talvez não é tão desprezível assim).
 
 Fiz alguns testes alterando as configurações de CPU e memória mas não obtive melhorias consideráveis.
 
